@@ -155,6 +155,11 @@ interface DialerState {
 
   // Tick simulation
   tick: () => void;
+
+  // Guided Tour
+  isTourOpen: boolean;
+  openTour: () => void;
+  closeTour: () => void;
 }
 
 const mockDefaultLead: BankingCustomer = {
@@ -279,6 +284,11 @@ export const useDialerStore = create<DialerState>((set, get) => ({
   // Authentication state
   currentUser: null,
   isAuthenticated: false,
+
+  // Guided Tour
+  isTourOpen: false,
+  openTour: () => set({ isTourOpen: true }),
+  closeTour: () => set({ isTourOpen: false }),
 
   restoreSession: () => {
     if (typeof window === "undefined") return;

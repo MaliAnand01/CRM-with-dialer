@@ -2,10 +2,10 @@
 
 import React from "react";
 import { useDialerStore } from "@/store/dialerStore";
-import { Search, PhoneCall, Bell, LogOut } from "lucide-react";
+import { Search, PhoneCall, Bell, LogOut, HelpCircle } from "lucide-react";
 
 export function Header() {
-  const { currentRole, setRole, activeView, setActiveView, simulateIncomingCall, currentUser, logout } =
+  const { currentRole, setRole, activeView, setActiveView, simulateIncomingCall, currentUser, logout, openTour } =
     useDialerStore();
 
   const pageTitle: Record<string, string> = {
@@ -55,6 +55,21 @@ export function Header() {
 
       {/* Right controls */}
       <div className="flex items-center gap-2.5">
+        {/* Guided Tour trigger */}
+        <button
+          onClick={openTour}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer border hover:bg-blue-100"
+          style={{
+            background: "#eff6ff",
+            borderColor: "#bfdbfe",
+            color: "#1d4ed8",
+          }}
+          title="Start interactive walkthrough"
+        >
+          <HelpCircle size={13} />
+          Tour
+        </button>
+
         {/* View toggle */}
         <div
           className="tour-role-switcher flex items-center rounded-lg p-0.5 gap-0.5"
