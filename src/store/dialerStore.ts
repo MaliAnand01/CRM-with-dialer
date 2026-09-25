@@ -31,6 +31,29 @@ export interface BankingCustomer {
   pastInteractions: PastInteraction[];
 }
 
+export interface CallRecording {
+  id: string;
+  leadId: string;
+  customerName: string;
+  maskedPhone: string;
+  agentName: string;
+  agentExt: string;
+  disposition: string;
+  ptpAmount?: number;
+  duration: string;
+  date: string;
+  notes?: string;
+  dispositionType: "ptp" | "refused" | "callback" | "dispute";
+}
+
+export const INITIAL_RECORDINGS: CallRecording[] = [
+  { id: "REC-0925-1042", leadId: "BLR-PL-94812", customerName: "Rameshwar K. Sharma", maskedPhone: "+91 98765 XXXXX", agentName: "Amit Verma",    agentExt: "1042", disposition: "Promise to Pay (PTP)", ptpAmount: 14250, duration: "03:42", date: "Today, 11:28 AM", dispositionType: "ptp", notes: "Customer cited salary delayed by HR. Committed to clear overdue amount on 22nd morning." },
+  { id: "REC-0925-1018", leadId: "MUM-CC-83109", customerName: "Sunil S. Deshmukh",   maskedPhone: "+91 98201 XXXXX", agentName: "Priya Nair",     agentExt: "1018", disposition: "Refused to Pay",       duration: "02:18", date: "Today, 11:15 AM", dispositionType: "refused", notes: "Disputed penalty fees charged on statement." },
+  { id: "REC-0925-1089", leadId: "DEL-AL-72910", customerName: "Harish C. Gupta",     maskedPhone: "+91 99112 XXXXX", agentName: "Rahul Sharma",    agentExt: "1089", disposition: "Call Back",             duration: "01:05", date: "Today, 10:52 AM", dispositionType: "callback", notes: "Driving on highway. Requested call back in evening." },
+  { id: "REC-0925-1033", leadId: "BLR-PL-10928", customerName: "Vikram Malhotra",     maskedPhone: "+91 97410 XXXXX", agentName: "Sneha Patel",     agentExt: "1033", disposition: "Promise to Pay (PTP)", ptpAmount: 22000, duration: "04:12", date: "Today, 10:30 AM", dispositionType: "ptp", notes: "Customer agreed to pay via NetBanking link." },
+  { id: "REC-0925-1102", leadId: "HYD-CC-91823", customerName: "K. Venkatesh Rao",   maskedPhone: "+91 98490 XXXXX", agentName: "Karan Mehta",     agentExt: "1102", disposition: "Dispute",               duration: "05:40", date: "Today, 09:48 AM", dispositionType: "dispute", notes: "Transaction fraud claim registered with bank." },
+];
+
 export interface FloorAgent {
   id: string;
   name: string;
@@ -137,6 +160,10 @@ interface DialerState {
   setDispositionField: (key: string, value: any) => void;
   submitDisposition: () => void;
   clearToast: () => void;
+
+  // Call Recordings Spool
+  callRecordings: CallRecording[];
+  addCallRecording: (recording: CallRecording) => void;
 
   // Lead Profile Viewer
   viewingLeadProfile: BankingCustomer | null;
@@ -291,6 +318,10 @@ export const useDialerStore = create<DialerState>((set, get) => ({
   tourTrigger: 0,
   openTour: () => set((s) => ({ isTourOpen: true, tourTrigger: s.tourTrigger + 1 })),
   closeTour: () => set({ isTourOpen: false }),
+
+  // Call Recordings Spool
+  callRecordings: INITIAL_RECORDINGS,
+  addCallRecording: (recording) => set((s) => ({ callRecordings: [recording, ...s.callRecordings] })),
 
   restoreSession: () => {
     if (typeof window === "undefined") return;
@@ -531,10 +562,78 @@ export const useDialerStore = create<DialerState>((set, get) => ({
   },
 
   submitDisposition: () => {
-    const { dispositionStatus, ptpAmount, ptpDate, activeLead, sendWhatsAppNotice } = get();
+    const {
+      dispositionStatus,
+      ptpAmount,
+      ptpDate,
+      activeLead,
+      sendWhatsAppNotice,
+      callDuration,
+      currentUser,
+      currentRole,
+      callRecordings,
+      remarks,
+    } = get();
+
+    const lead = activeLead || mockDefaultLead;
+    const agentName = currentUser?.name || (currentRole === "agent" ? "Vikram Gupta" : "Vikram Malhotra");
+    const agentExt = currentUser?.id?.replace("AGT-", "").replace("SUP-", "") || "1002";
+
+    const durSec = callDuration || 142;
+    const durStr = `${Math.floor(durSec / 60).toString().padStart(2, "0")}:${(durSec % 60).toString().padStart(2, "0")}`;
+
+    const dispMap: Record<string, { label: string; type: "ptp" | "refused" | "callback" | "dispute" }> = {
+      PTP: { label: "Promise to Pay (PTP)", type: "ptp" },
+      PAID: { label: "Customer Paid", type: "ptp" },
+      CALL_BACK: { label: "Call Back", type: "callback" },
+      DISPUTE: { label: "Dispute", type: "dispute" },
+      RTP: { label: "Refused to Pay", type: "refused" },
+      WRONG_NUMBER: { label: "Wrong Number", type: "refused" },
+      RINGING_NO_ANSWER: { label: "No Answer", type: "callback" },
+    };
+
+    const dispInfo = dispMap[dispositionStatus] || { label: dispositionStatus, type: "callback" };
+    const numPtp = ptpAmount ? Number(ptpAmount) : (dispositionStatus === "PTP" ? 14250 : undefined);
+    const resolvedDate = ptpDate || (dispositionStatus === "PTP" ? "2026-09-28" : undefined);
+    const resolvedNotes =
+      remarks ||
+      (dispositionStatus === "PTP"
+        ? `Customer committed ₹${numPtp?.toLocaleString("en-IN") || "14,250"} by ${resolvedDate}. Automated payment link sent via WhatsApp.`
+        : `Call completed. Outcome recorded as ${dispInfo.label}.`);
+
+    const newInteraction: PastInteraction = {
+      id: `INT-${Date.now()}`,
+      date: `Today, ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`,
+      agent: `${agentName} (Ext ${agentExt})`,
+      disposition: dispInfo.label,
+      ptpAmount: numPtp,
+      ptpDate: resolvedDate,
+      notes: resolvedNotes,
+    };
+
+    const newRecording: CallRecording = {
+      id: `REC-${new Date().toISOString().slice(5, 10).replace("-", "")}-${Math.floor(1000 + Math.random() * 9000)}`,
+      leadId: lead.loanAccountNo,
+      customerName: lead.customerName,
+      maskedPhone: lead.maskedPhone,
+      agentName,
+      agentExt,
+      disposition: dispInfo.label,
+      ptpAmount: numPtp,
+      duration: durStr,
+      date: "Just now",
+      notes: resolvedNotes,
+      dispositionType: dispInfo.type,
+    };
+
+    const updatedLead: BankingCustomer = {
+      ...lead,
+      pastInteractions: [newInteraction, ...lead.pastInteractions],
+    };
+
     const message = sendWhatsAppNotice
-      ? `Disposition [${dispositionStatus}] recorded. Automated WhatsApp payment link dispatched to customer.`
-      : `Disposition [${dispositionStatus}] successfully saved to CRM audit log.`;
+      ? `Call saved. PTP committed ₹${numPtp?.toLocaleString("en-IN") || "14,250"}. WhatsApp payment link sent to ${lead.customerName}.`
+      : `Call saved. Outcome [${dispInfo.label}] logged to CRM audit trail & recordings.`;
 
     set({
       dispositionSubmitted: true,
@@ -542,7 +641,8 @@ export const useDialerStore = create<DialerState>((set, get) => ({
       agentStatus: "IDLE",
       pauseReason: null,
       callDuration: 0,
-      activeLead: null,
+      activeLead: updatedLead,
+      callRecordings: [newRecording, ...callRecordings],
     });
   },
 

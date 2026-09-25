@@ -2,28 +2,7 @@
 
 import React, { useState } from "react";
 import { Play, Pause, Download, Search, X } from "lucide-react";
-
-interface Recording {
-  id: string;
-  leadId: string;
-  customerName: string;
-  maskedPhone: string;
-  agentName: string;
-  agentExt: string;
-  disposition: string;
-  ptpAmount?: number;
-  duration: string;
-  date: string;
-  dispositionType: "ptp" | "refused" | "callback" | "dispute";
-}
-
-const mockRecordings: Recording[] = [
-  { id: "REC-0924-1042", leadId: "BLR-PL-94812", customerName: "Rameshwar K. Sharma", maskedPhone: "+91 98765 XXXXX", agentName: "Amit Verma",    agentExt: "1042", disposition: "Promise to Pay",    ptpAmount: 14250, duration: "03:42", date: "Today, 11:28 AM", dispositionType: "ptp" },
-  { id: "REC-0924-1018", leadId: "MUM-CC-83109", customerName: "Sunil S. Deshmukh",   maskedPhone: "+91 98201 XXXXX", agentName: "Priya Nair",     agentExt: "1018", disposition: "Refused to Pay",    duration: "02:18", date: "Today, 11:15 AM", dispositionType: "refused" },
-  { id: "REC-0924-1089", leadId: "DEL-AL-72910", customerName: "Harish C. Gupta",     maskedPhone: "+91 99112 XXXXX", agentName: "Rahul Sharma",    agentExt: "1089", disposition: "Call Back",          duration: "01:05", date: "Today, 10:52 AM", dispositionType: "callback" },
-  { id: "REC-0924-1033", leadId: "BLR-PL-10928", customerName: "Vikram Malhotra",     maskedPhone: "+91 97410 XXXXX", agentName: "Sneha Patel",     agentExt: "1033", disposition: "Promise to Pay",    ptpAmount: 22000, duration: "04:12", date: "Today, 10:30 AM", dispositionType: "ptp" },
-  { id: "REC-0924-1102", leadId: "HYD-CC-91823", customerName: "K. Venkatesh Rao",   maskedPhone: "+91 98490 XXXXX", agentName: "Karan Mehta",     agentExt: "1102", disposition: "Dispute",            duration: "05:40", date: "Today, 09:48 AM", dispositionType: "dispute" },
-];
+import { useDialerStore, CallRecording } from "@/store/dialerStore";
 
 const dispStyle: Record<string, { bg: string; color: string }> = {
   ptp:      { bg: "#dcfce7", color: "#166534" },
@@ -33,15 +12,20 @@ const dispStyle: Record<string, { bg: string; color: string }> = {
 };
 
 export function CallRecordingsTab() {
-  const [playingId, setPlayingId] = useState<string | null>("REC-0924-1042");
+  const { callRecordings } = useDialerStore();
+  const [playingId, setPlayingId] = useState<string | null>(callRecordings[0]?.id || null);
   const [speed, setSpeed] = useState(1);
   const [search, setSearch] = useState("");
 
-  const playing = mockRecordings.find((r) => r.id === playingId);
+  const playing = callRecordings.find((r) => r.id === playingId);
 
-  const filtered = mockRecordings.filter((r) => {
+  const filtered = callRecordings.filter((r) => {
     const q = search.toLowerCase();
-    return r.customerName.toLowerCase().includes(q) || r.leadId.toLowerCase().includes(q) || r.agentName.toLowerCase().includes(q);
+    return (
+      r.customerName.toLowerCase().includes(q) ||
+      r.leadId.toLowerCase().includes(q) ||
+      r.agentName.toLowerCase().includes(q)
+    );
   });
 
   return (

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useDialerStore } from "@/store/dialerStore";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Shield, User, Clock, FileText } from "lucide-react";
+import { Phone, Shield, User, Clock, FileText, ExternalLink } from "lucide-react";
 
 const TABS = [
   { id: "overview", label: "Overview", icon: User },
@@ -14,7 +14,7 @@ const TABS = [
 type TabId = typeof TABS[number]["id"];
 
 export function Customer360Card() {
-  const { activeLead } = useDialerStore();
+  const { activeLead, openLeadProfile, dispositionSubmitted } = useDialerStore();
   const [tab, setTab] = useState<TabId>("overview");
 
   if (!activeLead) {
@@ -92,12 +92,22 @@ export function Customer360Card() {
             </div>
           </div>
 
-          <div
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium shrink-0"
-            style={{ background: "var(--bg-app)", border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
-          >
-            <Shield size={12} />
-            Number Masked
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => openLeadProfile(activeLead)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer border transition-colors bg-white hover:bg-slate-50 text-slate-700 border-slate-200 shadow-xs"
+              title="Open full Customer 360 profile modal"
+            >
+              <ExternalLink size={12} />
+              Full Profile
+            </button>
+            <div
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium shrink-0"
+              style={{ background: "var(--bg-app)", border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
+            >
+              <Shield size={12} />
+              Number Masked
+            </div>
           </div>
         </div>
       </div>
@@ -146,6 +156,25 @@ export function Customer360Card() {
           </div>
         ))}
       </div>
+
+      {/* Saved Activity Notification */}
+      {dispositionSubmitted && (
+        <div className="mx-6 mt-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs text-emerald-800">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>
+              <strong>Call Activity Saved:</strong> Customer history & PTP commitment updated. Select{" "}
+              <strong>History</strong> tab below to inspect.
+            </span>
+          </div>
+          <button
+            onClick={() => setTab("history")}
+            className="text-xs font-semibold text-emerald-700 underline cursor-pointer hover:text-emerald-900 shrink-0 ml-2"
+          >
+            View History →
+          </button>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="px-6 pt-4">

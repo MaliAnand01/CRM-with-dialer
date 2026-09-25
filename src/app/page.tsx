@@ -13,6 +13,7 @@ import { CustomerLeadsDirectory } from "@/components/leads/CustomerLeadsDirector
 import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
 import { LoginPage } from "@/components/auth/LoginPage";
 import { DemoTour } from "@/components/DemoTour";
+import { CustomerProfileModal } from "@/components/leads/CustomerProfileModal";
 import { SettingsTab } from "@/components/supervisor/SettingsTab";
 
 export default function Home() {
@@ -38,6 +39,7 @@ export default function Home() {
   return (
     <div className="flex h-full overflow-hidden" style={{ background: "var(--bg-app)" }}>
       <DemoTour />
+      <CustomerProfileModal />
       <Sidebar />
 
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
