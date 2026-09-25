@@ -158,6 +158,7 @@ interface DialerState {
 
   // Guided Tour
   isTourOpen: boolean;
+  tourTrigger: number;
   openTour: () => void;
   closeTour: () => void;
 }
@@ -287,7 +288,8 @@ export const useDialerStore = create<DialerState>((set, get) => ({
 
   // Guided Tour
   isTourOpen: false,
-  openTour: () => set({ isTourOpen: true }),
+  tourTrigger: 0,
+  openTour: () => set((s) => ({ isTourOpen: true, tourTrigger: s.tourTrigger + 1 })),
   closeTour: () => set({ isTourOpen: false }),
 
   restoreSession: () => {
@@ -423,7 +425,34 @@ export const useDialerStore = create<DialerState>((set, get) => ({
   },
 
   currentRole: "agent",
-  setRole: (role) => set({ currentRole: role, activeView: role === "supervisor" ? "floor" : "agent" }),
+  setRole: (role) => {
+    const current = get().currentUser;
+    let updatedUser: AuthUser | null = null;
+    if (current) {
+      updatedUser = {
+        ...current,
+        role,
+        name:
+          role === "supervisor"
+            ? (current.name.includes("Verma") || current.name.includes("Pooja") ? "Pooja Mehta" : "Vikram Malhotra")
+            : (current.name.includes("Mehta") || current.name.includes("Pooja") ? "Pooja Verma" : "Vikram Gupta"),
+        department:
+          role === "supervisor"
+            ? "Operations Floor Director (200 Seats)"
+            : "Collections Agent (Station 1002)",
+      };
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("fintel_dialer_auth_session", JSON.stringify(updatedUser));
+        } catch {}
+      }
+    }
+    set({
+      currentRole: role,
+      currentUser: updatedUser ?? current,
+      activeView: role === "supervisor" ? "floor" : "agent",
+    });
+  },
   activeView: "agent",
   setActiveView: (view) => set({ activeView: view }),
 

@@ -3,31 +3,45 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Joyride, STATUS, EVENTS } from "react-joyride";
 import { useDialerStore } from "@/store/dialerStore";
-import { Compass, Sparkles, X } from "lucide-react";
+import { X } from "lucide-react";
 
 export function DemoTour() {
-  const { isAuthenticated, currentRole, isTourOpen, openTour, closeTour } = useDialerStore();
+  const { isAuthenticated, currentRole, isTourOpen, tourTrigger, closeTour } = useDialerStore();
   const [run, setRun] = useState(false);
   const [tourKey, setTourKey] = useState(0);
   const [showWelcome, setShowWelcome] = useState(false);
-  const [hasPromptedWelcome, setHasPromptedWelcome] = useState(false);
+  const prevRoleRef = React.useRef(currentRole);
+  const hasMountedRef = React.useRef(false);
 
-  // Auto-show welcome modal upon initial login session
+  // Auto-show welcome modal upon initial session mount
   useEffect(() => {
-    if (isAuthenticated && !hasPromptedWelcome) {
+    if (isAuthenticated && !hasMountedRef.current) {
+      hasMountedRef.current = true;
       setShowWelcome(true);
-      setHasPromptedWelcome(true);
+      prevRoleRef.current = currentRole;
     }
-  }, [isAuthenticated, hasPromptedWelcome]);
+  }, [isAuthenticated, currentRole]);
 
-  // Sync external openTour trigger from Header button or store
+  // When role changes (e.g. user toggles between Agent & Supervisor in header)
   useEffect(() => {
-    if (isTourOpen) {
+    if (!isAuthenticated) return;
+    if (prevRoleRef.current !== currentRole) {
+      prevRoleRef.current = currentRole;
+      // Stop previous tour and prompt the walkthrough for the new role!
+      setRun(false);
+      setShowWelcome(true);
+      closeTour();
+    }
+  }, [currentRole, isAuthenticated, closeTour]);
+
+  // Sync external openTour trigger from Header button or store (tourTrigger counter)
+  useEffect(() => {
+    if (tourTrigger > 0) {
       setShowWelcome(false);
       setRun(true);
       setTourKey((prev) => prev + 1);
     }
-  }, [isTourOpen]);
+  }, [tourTrigger]);
 
   // Steps configuration per role
   const steps = useMemo(() => {
@@ -244,64 +258,37 @@ export function DemoTour() {
       {showWelcome && (
         <div
           className="fixed inset-0 flex items-center justify-center z-[10000] p-4"
-          style={{ background: "rgba(15, 23, 42, 0.5)", backdropFilter: "blur(4px)" }}
+          style={{ background: "rgba(15, 23, 42, 0.4)", backdropFilter: "blur(2px)" }}
         >
-          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-lg w-full border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ background: "#eff6ff", color: "var(--brand-primary)" }}
-                >
-                  <Compass size={22} />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>
-                    Welcome to FinTel CRM
-                  </h2>
-                  <p className="text-xs font-medium" style={{ color: "var(--brand-primary)" }}>
-                    {currentRole === "agent" ? "Agent Console Walkthrough" : "Supervisor Operations Floor Walkthrough"}
-                  </p>
-                </div>
-              </div>
+          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full border border-slate-200 animate-in fade-in duration-150">
+            <div className="flex items-start justify-between mb-2">
+              <h2 className="text-base font-semibold text-slate-900">
+                Product Walkthrough
+              </h2>
               <button
                 onClick={handleSkipTour}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                className="p-1 rounded-md text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
             </div>
 
-            <p className="text-sm mb-6 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              Take a quick 2-minute interactive tour of the {currentRole === "agent" ? "Agent Cockpit" : "Supervisor Dashboard"}. 
-              Discover all key predictive dialer capabilities, lead management, and live QA features.
+            <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+              Would you like a quick overview of the {currentRole === "agent" ? "agent desk" : "supervisor floor"} to see key features and navigation?
             </p>
 
-            <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 mb-6 text-xs text-slate-600 space-y-1.5">
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-                <span><strong>Role-Specific Views:</strong> Switch between Agent & Supervisor at any time.</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-                <span><strong>Live Simulation:</strong> Test incoming calls and audio barge-in on 200 agents.</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 justify-end">
+            <div className="flex items-center gap-2.5 justify-end">
               <button
                 onClick={handleSkipTour}
-                className="px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
-                style={{ color: "var(--text-secondary)", background: "#f1f5f9" }}
+                className="px-4 py-2 rounded-lg text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
               >
-                Skip for now
+                Not now
               </button>
               <button
                 onClick={handleStartTour}
-                className="px-5 py-2.5 rounded-xl text-xs font-semibold text-white transition-all shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2 rounded-lg text-xs font-medium text-white transition-colors cursor-pointer"
                 style={{ background: "var(--brand-primary)" }}
               >
-                <Sparkles size={14} />
                 Start Tour
               </button>
             </div>
