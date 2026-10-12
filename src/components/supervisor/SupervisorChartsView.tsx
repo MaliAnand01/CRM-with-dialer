@@ -181,8 +181,8 @@ export function SupervisorChartsView() {
               <AreaChart data={hourlyCallData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="gConnect" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor="#1d4ed8" stopOpacity={0.2} />
-                    <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0} />
+                    <stop offset="5%"  stopColor="#f36c21" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#f36c21" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="gDial" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%"  stopColor="#94a3b8" stopOpacity={0.15} />
@@ -194,7 +194,7 @@ export function SupervisorChartsView() {
                 <YAxis tick={{ fontSize: 11, fill: "#64748b" }} axisLine={false} tickLine={false} />
                 <Tooltip contentStyle={tooltipStyle} />
                 <Area type="monotone" dataKey="dialed"    stroke="#cbd5e1" strokeWidth={1.5} fill="url(#gDial)" />
-                <Area type="monotone" dataKey="connected" stroke="#1d4ed8" strokeWidth={2}   fill="url(#gConnect)" />
+                <Area type="monotone" dataKey="connected" stroke="#f36c21" strokeWidth={2}   fill="url(#gConnect)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>

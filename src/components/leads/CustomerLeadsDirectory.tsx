@@ -21,10 +21,12 @@ interface LeadItem {
 const mockLeads: LeadItem[] = [
   { id: "LD-101", loanNo: "BLR-PL-94812", name: "Rameshwar K. Sharma", phone: "+91 98765 XXXXX", overdue: 14250, total: 184500, bucket: "Bucket 2", dueDate: "10-Sep-2026", lastOutcome: "PTP — 28 Sep", outcomeType: "ptp" },
   { id: "LD-102", loanNo: "MUM-CC-83109", name: "Sunil S. Deshmukh",   phone: "+91 98201 XXXXX", overdue: 8900,  total: 62400,  bucket: "Bucket 1", dueDate: "15-Sep-2026", lastOutcome: "Call Back",      outcomeType: "callback" },
-  { id: "LD-103", loanNo: "DEL-AL-72910", name: "Harish Chandra Gupta",phone: "+91 99112 XXXXX", overdue: 21500, total: 340000, bucket: "Bucket 3", dueDate: "05-Aug-2026", lastOutcome: "Dispute",         outcomeType: "dispute" },
-  { id: "LD-104", loanNo: "BLR-PL-10928", name: "Vikram Malhotra",     phone: "+91 97410 XXXXX", overdue: 18200, total: 210000, bucket: "Bucket 2", dueDate: "12-Sep-2026", lastOutcome: "PTP — 30 Sep",    outcomeType: "ptp" },
-  { id: "LD-105", loanNo: "HYD-CC-91823", name: "K. Venkatesh Rao",    phone: "+91 98490 XXXXX", overdue: 12400, total: 95000,  bucket: "Bucket 1", dueDate: "18-Sep-2026", lastOutcome: "PTP — 25 Sep",    outcomeType: "ptp" },
-  { id: "LD-106", loanNo: "PUN-PL-44102", name: "Anand Kulkarni",      phone: "+91 98220 XXXXX", overdue: 9800,  total: 145000, bucket: "Bucket 1", dueDate: "20-Sep-2026", lastOutcome: "Call Back",        outcomeType: "callback" },
+  { id: "LD-103", loanNo: "DEL-VL-72910", name: "Harish Chandra Gupta",phone: "+91 99112 XXXXX", overdue: 21500, total: 340000, bucket: "Bucket 3", dueDate: "05-Aug-2026", lastOutcome: "Field Visit",    outcomeType: "dispute" },
+  { id: "LD-104", loanNo: "BLR-HL-50921", name: "Rajesh N. Iyer",       phone: "+91 97410 XXXXX", overdue: 38500, total: 2850000,bucket: "Bucket 2", dueDate: "12-Sep-2026", lastOutcome: "NACH Bounced",   outcomeType: "dispute" },
+  { id: "LD-105", loanNo: "HYD-BL-91823", name: "K. Venkatesh Rao",    phone: "+91 98490 XXXXX", overdue: 32400, total: 550000, bucket: "Bucket 1", dueDate: "18-Sep-2026", lastOutcome: "PTP — 25 Sep",    outcomeType: "ptp" },
+  { id: "LD-106", loanNo: "PUN-VR-44102", name: "Anita V. Kulkarni",   phone: "+91 98220 XXXXX", overdue: 0,     total: 450000, bucket: "Bucket 1", dueDate: "20-Sep-2026", lastOutcome: "Tele-Verified",  outcomeType: "ptp" },
+  { id: "LD-107", loanNo: "DEL-EC-10294", name: "Kunal S. Malhotra",   phone: "+91 99105 XXXXX", overdue: 0,     total: 18400,  bucket: "Bucket 1", dueDate: "22-Sep-2026", lastOutcome: "Resolved",       outcomeType: "ptp" },
+  { id: "LD-108", loanNo: "KOL-ED-88192", name: "Rohan Banerjee",      phone: "+91 98311 XXXXX", overdue: 12000, total: 420000, bucket: "Bucket 2", dueDate: "30-Sep-2026", lastOutcome: "PTP — 30 Sep",    outcomeType: "ptp" },
 ];
 
 // Convert a LeadItem to a BankingCustomer for the profile drawer
@@ -34,6 +36,26 @@ function leadToBankingCustomer(lead: LeadItem): BankingCustomer {
     "Bucket 2": "Bucket 2 (31-60 DPD)",
     "Bucket 3": "Bucket 3 (61-90 DPD)",
   };
+
+  const productType =
+    lead.loanNo.includes("CC") ? "Credit Card"
+    : lead.loanNo.includes("VL") ? "Vehicle Loan (Secured)"
+    : lead.loanNo.includes("HL") ? "Home Loan & Mortgage"
+    : lead.loanNo.includes("BL") ? "Business & Equipment Finance"
+    : lead.loanNo.includes("VR") ? "Tele & Field Verification"
+    : lead.loanNo.includes("EC") ? "E-Commerce Customer Support"
+    : lead.loanNo.includes("ED") ? "Education Loan"
+    : "Personal Loan (Unsecured)";
+
+  const assignedQueue =
+    lead.loanNo.includes("CC") ? "Diallo_CreditCard_30DPD"
+    : lead.loanNo.includes("VL") ? "Diallo_AutoLoan_Recovery"
+    : lead.loanNo.includes("HL") ? "Diallo_HomeLoan_Mortgage"
+    : lead.loanNo.includes("VR") ? "Diallo_Tele_Verification"
+    : lead.loanNo.includes("EC") ? "Diallo_Inbound_Support"
+    : lead.loanNo.includes("BL") ? "Diallo_Equipment_Finance"
+    : "Diallo_PL_Collections";
+
   return {
     id: lead.id,
     loanAccountNo: lead.loanNo,
@@ -44,19 +66,19 @@ function leadToBankingCustomer(lead: LeadItem): BankingCustomer {
     overdueEmi: lead.overdue,
     emiDueDate: lead.dueDate,
     tenureRemaining: "18 of 36 Months",
-    productType: lead.loanNo.includes("CC") ? "Credit Card" : lead.loanNo.includes("AL") ? "Auto Loan (Secured)" : "Personal Loan (Unsecured)",
+    productType,
     mandateStatus: lead.outcomeType === "ptp" ? "Active (Auto-Debit)" : "Bounced (Insufficient Funds)",
-    employer: "Not Available",
-    assignedQueue: "Collections_Tier_2",
+    employer: "Infosys Technologies / Reputed Employer",
+    assignedQueue,
     pastInteractions: [
       {
         id: "INT-GEN-1",
         date: "20-Sep-2026 10:30 AM",
-        agent: "System Generated",
+        agent: "Diallo Auto-Dialer",
         disposition: lead.lastOutcome.includes("PTP") ? "PTP (Promise to Pay)" : lead.lastOutcome,
         notes: lead.lastOutcome.includes("PTP")
-          ? `Customer committed to pay by ${lead.lastOutcome.replace("PTP — ", "")}.`
-          : "Last interaction recorded from campaign auto-dialer.",
+          ? `Customer committed to pay overdue via Diallo payment link by ${lead.lastOutcome.replace("PTP — ", "")}.`
+          : `Last outcome logged: ${lead.lastOutcome}.`,
         ptpAmount: lead.outcomeType === "ptp" ? lead.overdue : undefined,
         ptpDate: lead.outcomeType === "ptp" ? lead.lastOutcome.replace("PTP — ", "") : undefined,
       },

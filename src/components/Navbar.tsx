@@ -31,12 +31,14 @@ export function Navbar() {
         {/* Brand & Telephony Telemetry */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <div className="h-6 w-6 rounded bg-slate-900 flex items-center justify-center text-white text-xs font-bold tracking-tight">
-              FD
-            </div>
+            <img
+              src="/diallo-logo.jpg"
+              alt="Diallo"
+              className="h-6 w-6 rounded object-contain border border-slate-200"
+            />
             <div>
               <span className="font-semibold text-sm tracking-tight text-slate-900">
-                FinTel Dialer
+                Diallo Operations
               </span>
               <span className="ml-2 text-2xs text-slate-500 font-mono hidden md:inline">
                 v2.4-enterprise

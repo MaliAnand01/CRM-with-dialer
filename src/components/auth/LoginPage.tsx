@@ -17,11 +17,14 @@ import {
 } from "lucide-react";
 
 const QUEUES = [
-  "PL_Bucket_2",
-  "CreditCard_DPD_30",
-  "AutoLoan_Delinquency",
-  "PL_Bucket_1",
-  "NPA_PreRecovery",
+  "Diallo_PL_Collections",
+  "Diallo_AutoLoan_Recovery",
+  "Diallo_CreditCard_30DPD",
+  "Diallo_HomeLoan_Mortgage",
+  "Diallo_NACH_Mandate_Bounce",
+  "Diallo_Tele_Verification",
+  "Diallo_Inbound_Support",
+  "Diallo_Equipment_Finance",
 ];
 
 export function LoginPage() {
@@ -33,7 +36,7 @@ export function LoginPage() {
   const [agentId, setAgentId] = useState("AGT-1002");
   const [agentPassword, setAgentPassword] = useState("agent123");
   const [extension, setExtension] = useState("1002");
-  const [selectedQueue, setSelectedQueue] = useState("PL_Bucket_2");
+  const [selectedQueue, setSelectedQueue] = useState("Diallo_PL_Collections");
   const [showAgentPass, setShowAgentPass] = useState(false);
 
   // Supervisor form
@@ -107,17 +110,18 @@ export function LoginPage() {
       <div className="w-full max-w-[420px]">
         {/* Logo & Title */}
         <div className="text-center mb-8">
-          <div
-            className="inline-flex items-center justify-center rounded-xl font-bold text-white text-lg mb-4"
-            style={{ width: 44, height: 44, background: "var(--brand-primary)" }}
-          >
-            F
+          <div className="inline-flex items-center justify-center mb-3">
+            <img
+              src="/diallo-logo.jpg"
+              alt="Diallo"
+              className="w-16 h-16 rounded-2xl object-contain shadow-md border border-slate-200"
+            />
           </div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
-            FinTel CRM
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            Diallo
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Sign in to your account
+          <p className="text-xs font-medium text-slate-500 mt-1">
+            Omnichannel Contact Center & Collections Suite
           </p>
         </div>
 
@@ -193,8 +197,8 @@ export function LoginPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { id: "AGT-1002", name: "Pooja Verma", ext: "1002", queue: "PL_Bucket_2" },
-                    { id: "AGT-1001", name: "Rahul Sharma", ext: "1001", queue: "CreditCard_DPD_30" },
+                    { id: "AGT-1002", name: "Pooja Verma", ext: "1002", queue: "Diallo_PL_Collections" },
+                    { id: "AGT-1001", name: "Rahul Sharma", ext: "1001", queue: "Diallo_CreditCard_30DPD" },
                   ].map((preset) => (
                     <button
                       key={preset.id}

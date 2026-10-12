@@ -99,13 +99,13 @@ function QueueHealthView() {
       ],
     },
     {
-      name: "Lead Queues",
-      color: "#8b5cf6",
+      name: "Diallo Lead Queues",
+      color: "#f36c21",
       rows: [
-        ["PL_Bucket_2", "4,280 remaining"],
-        ["CreditCard_DPD_30", "2,910 remaining"],
-        ["AutoLoan_Delinquency", "1,450 remaining"],
-        ["PL_Bucket_1", "6,120 remaining"],
+        ["Diallo_PL_Collections", "4,280 remaining"],
+        ["Diallo_CreditCard_30DPD", "2,910 remaining"],
+        ["Diallo_AutoLoan_Recovery", "1,450 remaining"],
+        ["Diallo_NACH_Mandate_Bounce", "890 remaining"],
       ],
     },
     {

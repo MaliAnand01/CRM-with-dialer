@@ -40,7 +40,7 @@ export function Header() {
           />
           <input
             type="text"
-            placeholder="Search borrower, loan ID, phone..."
+            placeholder="Search borrower, account, lead, phone..."
             className="w-full h-9 pl-9 pr-3 rounded-lg text-sm border outline-none transition-colors"
             style={{
               background: "var(--bg-app)",
@@ -58,11 +58,11 @@ export function Header() {
         {/* Guided Tour trigger */}
         <button
           onClick={openTour}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer border hover:bg-blue-100"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer border"
           style={{
-            background: "#eff6ff",
-            borderColor: "#bfdbfe",
-            color: "#1d4ed8",
+            background: "var(--brand-primary-light)",
+            borderColor: "#fed7aa",
+            color: "var(--brand-primary-text)",
           }}
           title="Start interactive walkthrough"
         >

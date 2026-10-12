@@ -74,22 +74,25 @@ export function DispositionPanel() {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Positive</SelectLabel>
+                <SelectLabel>Resolution &amp; Commitments</SelectLabel>
                 <SelectItem value="PTP">Promise to Pay (PTP)</SelectItem>
                 <SelectItem value="PAID">Customer Already Paid</SelectItem>
+                <SelectItem value="NACH_RESUBMIT">NACH Mandate Resubmitted</SelectItem>
+                <SelectItem value="VERIFIED">Tele-Verification Approved</SelectItem>
               </SelectGroup>
               <SelectSeparator />
               <SelectGroup>
-                <SelectLabel>Follow-up</SelectLabel>
+                <SelectLabel>Follow-up &amp; Field Operations</SelectLabel>
                 <SelectItem value="CALL_BACK">Call Back Requested</SelectItem>
+                <SelectItem value="FIELD_VISIT">Field Agent Visit Scheduled</SelectItem>
                 <SelectItem value="DISPUTE">Dispute — Interest / Charges</SelectItem>
               </SelectGroup>
               <SelectSeparator />
               <SelectGroup>
-                <SelectLabel>Negative</SelectLabel>
+                <SelectLabel>Negative / Unreachable</SelectLabel>
                 <SelectItem value="RTP">Refused to Pay</SelectItem>
                 <SelectItem value="WRONG_NUMBER">Wrong Number</SelectItem>
-                <SelectItem value="RINGING_NO_ANSWER">No Answer</SelectItem>
+                <SelectItem value="RINGING_NO_ANSWER">No Answer / RNR</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

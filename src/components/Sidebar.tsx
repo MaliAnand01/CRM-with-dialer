@@ -68,26 +68,25 @@ export function Sidebar() {
       style={{
         width: "var(--sidebar-width)",
         background: "var(--bg-sidebar)",
-        borderRight: "1px solid #1e293b",
+        borderRight: "1px solid rgba(255, 255, 255, 0.08)",
       }}
     >
       {/* Logo */}
       <div
         className="flex items-center gap-3 px-5 shrink-0"
-        style={{ height: "var(--header-height)", borderBottom: "1px solid #1e293b" }}
+        style={{ height: "var(--header-height)", borderBottom: "1px solid rgba(255, 255, 255, 0.08)" }}
       >
-        <div
-          className="flex items-center justify-center shrink-0 rounded-lg font-bold text-white text-sm"
-          style={{ width: 32, height: 32, background: "var(--brand-primary)", fontFamily: "inherit" }}
-        >
-          F
-        </div>
-        <div>
-          <div className="font-semibold text-sm leading-none" style={{ color: "#f1f5f9" }}>
-            FinTel CRM
+        <img
+          src="/diallo-logo.jpg"
+          alt="Diallo"
+          className="w-8 h-8 rounded-lg object-contain shadow-xs border border-white/10 shrink-0"
+        />
+        <div className="min-w-0">
+          <div className="font-bold text-base leading-none tracking-wide text-white">
+            Diallo
           </div>
-          <div className="text-xs mt-0.5" style={{ color: "#475569" }}>
-            Contact Center
+          <div className="text-[11px] mt-1 font-medium truncate" style={{ color: "rgba(255, 255, 255, 0.65)" }}>
+            BPO & Operations CRM
           </div>
         </div>
       </div>
@@ -96,19 +95,19 @@ export function Sidebar() {
       <div className="px-4 pt-4 pb-1">
         <div
           className="flex items-center gap-2 px-3 py-2 rounded-lg"
-          style={{ background: "#1e293b" }}
+          style={{ background: "rgba(255, 255, 255, 0.06)", border: "1px solid rgba(255, 255, 255, 0.08)" }}
         >
           <span
             className="text-xs font-semibold px-2 py-0.5 rounded-md"
             style={
               currentRole === "agent"
-                ? { background: "#1d4ed8", color: "#fff" }
-                : { background: "#7c3aed", color: "#fff" }
+                ? { background: "var(--brand-primary)", color: "#fff" }
+                : { background: "#0284c7", color: "#fff" }
             }
           >
             {currentRole === "agent" ? "Agent" : "Supervisor"}
           </span>
-          <span className="text-xs truncate" style={{ color: "#94a3b8" }}>
+          <span className="text-xs truncate text-slate-200">
             {currentUser?.name || (currentRole === "agent" ? "Pooja Verma" : "Vikram Malhotra")}
           </span>
         </div>
@@ -165,7 +164,7 @@ export function Sidebar() {
         <div className="px-3 pb-2">
           <div
             className="px-3 py-2.5 rounded-lg flex items-center gap-2.5"
-            style={{ background: "#1e293b" }}
+            style={{ background: "rgba(255, 255, 255, 0.05)", border: "1px solid rgba(255, 255, 255, 0.08)" }}
           >
             <span
               className="w-2 h-2 rounded-full shrink-0"
@@ -175,7 +174,7 @@ export function Sidebar() {
               <div className="text-xs font-medium" style={{ color: "#e2e8f0" }}>
                 {statusLabel}
               </div>
-              <div className="text-xs" style={{ color: "#475569" }}>
+              <div className="text-xs" style={{ color: "rgba(255, 255, 255, 0.5)" }}>
                 Ext {currentUser?.extension || "1002"}
               </div>
             </div>
@@ -186,7 +185,7 @@ export function Sidebar() {
       {/* User footer */}
       <div
         className="px-3 py-3 flex items-center justify-between shrink-0"
-        style={{ borderTop: "1px solid #1e293b" }}
+        style={{ borderTop: "1px solid rgba(255, 255, 255, 0.08)" }}
       >
         <div className="flex items-center gap-2.5 min-w-0">
           <div

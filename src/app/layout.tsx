@@ -10,9 +10,9 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "FinTel | Contact Center CRM & Dialer",
+  title: "Diallo | Contact Center CRM & Operations Suite",
   description:
-    "Enterprise telecalling CRM and dialer platform for banking and NBFC contact centers.",
+    "Enterprise telecalling CRM, collections dialer, verification services, and NACH processing for Diallo.",
 };
 
 export default function RootLayout({

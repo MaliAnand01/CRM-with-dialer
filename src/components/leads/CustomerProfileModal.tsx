@@ -380,8 +380,8 @@ export function CustomerProfileModal() {
                   <FileText size={16} className="text-blue-600" />
                   Mandatory Statutory Opening Disclosure (RBI / Fair Practices Compliant)
                 </div>
-                <div className="p-4 rounded-xl bg-blue-50/70 border border-blue-200 text-slate-800 text-sm leading-relaxed italic">
-                  &quot;Good day, am I speaking with <strong>Mr./Ms. {lead.customerName}</strong>? My name is calling from the FinTel Retail Collections Unit on behalf of your creditor regarding your personal loan account <strong>#{lead.loanAccountNo}</strong>. We noticed an overdue EMI of <strong>₹{lead.overdueEmi.toLocaleString("en-IN")}</strong> that was due on <strong>{lead.emiDueDate}</strong>. Can you confirm when you plan to settle this balance?&quot;
+                <div className="p-4 rounded-xl bg-orange-50/70 border border-orange-200 text-slate-800 text-sm leading-relaxed italic">
+                  &quot;Good day, am I speaking with <strong>Mr./Ms. {lead.customerName}</strong>? My name is calling from the Diallo Retail Collections &amp; Operations Unit on behalf of your creditor regarding your personal loan account <strong>#{lead.loanAccountNo}</strong>. We noticed an overdue EMI of <strong>₹{lead.overdueEmi.toLocaleString("en-IN")}</strong> that was due on <strong>{lead.emiDueDate}</strong>. Can you confirm when you plan to settle this balance?&quot;
                 </div>
               </div>
 

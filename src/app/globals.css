@@ -4,18 +4,18 @@
    DESIGN TOKENS — single source of truth for all UI rules
    ============================================================ */
 :root {
-  /* Brand */
-  --brand-primary: #1d4ed8;       /* Blue 700  */
-  --brand-primary-hover: #1e40af; /* Blue 800  */
-  --brand-primary-light: #dbeafe; /* Blue 100  */
-  --brand-primary-text: #1d4ed8;  /* Blue 700  */
+  /* Brand — Diallo Theme */
+  --brand-primary: #f36c21;       /* Diallo Orange */
+  --brand-primary-hover: #dd5b13; /* Diallo Orange Dark */
+  --brand-primary-light: #fff3ec; /* Warm Orange Tint */
+  --brand-primary-text: #c2410c;  /* Orange 700 for high contrast text */
 
   /* Backgrounds */
-  --bg-app: #f1f5f9;              /* Slate 100 — app chrome */
+  --bg-app: #f4f7f9;              /* Crisp slate app canvas */
   --bg-surface: #ffffff;          /* Card / panel white */
-  --bg-sidebar: #0f172a;          /* Dark navy sidebar */
-  --bg-sidebar-hover: #1e293b;    /* Slate 800 */
-  --bg-sidebar-active: #1d4ed8;   /* Brand blue active */
+  --bg-sidebar: #04334b;          /* Diallo signature deep navy */
+  --bg-sidebar-hover: #08496b;    /* Diallo navy hover */
+  --bg-sidebar-active: #f36c21;   /* Diallo orange active */
   --bg-header: #ffffff;
 
   /* Text */

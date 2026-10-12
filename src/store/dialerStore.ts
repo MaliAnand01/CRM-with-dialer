@@ -47,11 +47,11 @@ export interface CallRecording {
 }
 
 export const INITIAL_RECORDINGS: CallRecording[] = [
-  { id: "REC-0925-1042", leadId: "BLR-PL-94812", customerName: "Rameshwar K. Sharma", maskedPhone: "+91 98765 XXXXX", agentName: "Amit Verma",    agentExt: "1042", disposition: "Promise to Pay (PTP)", ptpAmount: 14250, duration: "03:42", date: "Today, 11:28 AM", dispositionType: "ptp", notes: "Customer cited salary delayed by HR. Committed to clear overdue amount on 22nd morning." },
+  { id: "REC-0925-1042", leadId: "BLR-PL-94812", customerName: "Rameshwar K. Sharma", maskedPhone: "+91 98765 XXXXX", agentName: "Amit Verma",    agentExt: "1042", disposition: "Promise to Pay (PTP)", ptpAmount: 14250, duration: "03:42", date: "Today, 11:28 AM", dispositionType: "ptp", notes: "Customer cited salary delayed by HR. Committed to clear overdue amount on 22nd morning via Diallo payment link." },
   { id: "REC-0925-1018", leadId: "MUM-CC-83109", customerName: "Sunil S. Deshmukh",   maskedPhone: "+91 98201 XXXXX", agentName: "Priya Nair",     agentExt: "1018", disposition: "Refused to Pay",       duration: "02:18", date: "Today, 11:15 AM", dispositionType: "refused", notes: "Disputed penalty fees charged on statement." },
-  { id: "REC-0925-1089", leadId: "DEL-AL-72910", customerName: "Harish C. Gupta",     maskedPhone: "+91 99112 XXXXX", agentName: "Rahul Sharma",    agentExt: "1089", disposition: "Call Back",             duration: "01:05", date: "Today, 10:52 AM", dispositionType: "callback", notes: "Driving on highway. Requested call back in evening." },
-  { id: "REC-0925-1033", leadId: "BLR-PL-10928", customerName: "Vikram Malhotra",     maskedPhone: "+91 97410 XXXXX", agentName: "Sneha Patel",     agentExt: "1033", disposition: "Promise to Pay (PTP)", ptpAmount: 22000, duration: "04:12", date: "Today, 10:30 AM", dispositionType: "ptp", notes: "Customer agreed to pay via NetBanking link." },
-  { id: "REC-0925-1102", leadId: "HYD-CC-91823", customerName: "K. Venkatesh Rao",   maskedPhone: "+91 98490 XXXXX", agentName: "Karan Mehta",     agentExt: "1102", disposition: "Dispute",               duration: "05:40", date: "Today, 09:48 AM", dispositionType: "dispute", notes: "Transaction fraud claim registered with bank." },
+  { id: "REC-0925-1089", leadId: "DEL-VL-72910", customerName: "Harish C. Gupta",     maskedPhone: "+91 99112 XXXXX", agentName: "Rahul Sharma",    agentExt: "1089", disposition: "Field Visit Scheduled", duration: "01:05", date: "Today, 10:52 AM", dispositionType: "callback", notes: "Borrower requested in-person documentation. Routed to Diallo Field Recovery team." },
+  { id: "REC-0925-1033", leadId: "BLR-HL-50921", customerName: "Rajesh N. Iyer",       maskedPhone: "+91 97410 XXXXX", agentName: "Sneha Patel",     agentExt: "1033", disposition: "NACH Resubmitted",      duration: "04:12", date: "Today, 10:30 AM", dispositionType: "ptp", notes: "Customer provided secondary bank account for NACH eMandate clearing." },
+  { id: "REC-0925-1102", leadId: "PUN-VR-44102", customerName: "Anita V. Kulkarni",   maskedPhone: "+91 98220 XXXXX", agentName: "Karan Mehta",     agentExt: "1102", disposition: "Tele-Verification Approved", duration: "02:40", date: "Today, 09:48 AM", dispositionType: "ptp", notes: "KYC & residential address verified against utility records with zero discrepancies." },
 ];
 
 export interface FloorAgent {
@@ -92,7 +92,7 @@ export const SUPERVISOR_ACCOUNTS: SupervisorAccount[] = [
   {
     id: "SUP-2001",
     name: "Vikram Malhotra",
-    email: "vikram.malhotra@fintel.internal",
+    email: "vikram.malhotra@diallo.co.in",
     role: "supervisor",
     department: "Operations Floor Director (200 Seats)",
     passwordHint: "supervisor123",
@@ -100,7 +100,7 @@ export const SUPERVISOR_ACCOUNTS: SupervisorAccount[] = [
   {
     id: "SUP-2002",
     name: "Pooja Mehta",
-    email: "pooja.mehta@fintel.internal",
+    email: "pooja.mehta@diallo.co.in",
     role: "supervisor",
     department: "Collections QA & Floor Supervisor",
     passwordHint: "supervisor123",
@@ -203,7 +203,7 @@ const mockDefaultLead: BankingCustomer = {
   productType: "Personal Loan (Unsecured)",
   mandateStatus: "Bounced (Insufficient Funds)",
   employer: "Infosys Technologies Ltd, Bengaluru",
-  assignedQueue: "Collections_Tier_2",
+  assignedQueue: "Diallo_PL_Collections",
   pastInteractions: [
     {
       id: "INT-1",
@@ -243,16 +243,20 @@ export function generate200Agents(): FloorAgent[] {
     "Singh", "Chauhan", "Joshi", "Bhatia", "Saxena", "Malhotra", "Kulkarni", "Das"
   ];
   const queues = [
-    "PL_Bucket_2",
-    "CreditCard_DPD_30",
-    "AutoLoan_Delinquency",
-    "PL_Bucket_1",
-    "NPA_PreRecovery"
+    "Diallo_PL_Collections",
+    "Diallo_AutoLoan_Recovery",
+    "Diallo_CreditCard_30DPD",
+    "Diallo_HomeLoan_Mortgage",
+    "Diallo_NACH_Mandate_Bounce",
+    "Diallo_Tele_Verification",
+    "Diallo_Inbound_Support",
+    "Diallo_Equipment_Finance"
   ];
   const campaigns = [
-    "H1_Retail_Loans_Recovery",
-    "Card_Collections_West",
-    "Auto_Secured_Outreach"
+    "Diallo_Retail_Debt_Recovery",
+    "Diallo_Verification_&_KYC",
+    "Diallo_NACH_Bounce_Dispute",
+    "Diallo_Secured_Auto_Mortgage"
   ];
 
   const agents: FloorAgent[] = [];
@@ -585,7 +589,10 @@ export const useDialerStore = create<DialerState>((set, get) => ({
     const dispMap: Record<string, { label: string; type: "ptp" | "refused" | "callback" | "dispute" }> = {
       PTP: { label: "Promise to Pay (PTP)", type: "ptp" },
       PAID: { label: "Customer Paid", type: "ptp" },
+      NACH_RESUBMIT: { label: "NACH Mandate Resubmitted", type: "ptp" },
+      VERIFIED: { label: "Tele-Verification Approved", type: "ptp" },
       CALL_BACK: { label: "Call Back", type: "callback" },
+      FIELD_VISIT: { label: "Field Visit Scheduled", type: "callback" },
       DISPUTE: { label: "Dispute", type: "dispute" },
       RTP: { label: "Refused to Pay", type: "refused" },
       WRONG_NUMBER: { label: "Wrong Number", type: "refused" },
